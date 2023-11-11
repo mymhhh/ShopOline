@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.shop.shoponline.query.UserLoginQuery;
 import com.shop.shoponline.vo.LoginResultVO;
 import com.shop.shoponline.vo.UserVO;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -20,4 +21,6 @@ public interface UserService extends IService<User> {
     LoginResultVO login(UserLoginQuery query);
 //修改用户信息
     UserVO editUserInfo(UserVO userVO);
+    String editUserAvatar(Integer userID, MultipartFile file);
+
 }

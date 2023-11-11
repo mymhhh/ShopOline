@@ -1,6 +1,5 @@
 package com.shop.shoponline.convert;
 
-
 import com.shop.shoponline.entity.User;
 import com.shop.shoponline.vo.LoginResultVO;
 import com.shop.shoponline.vo.UserVO;
@@ -12,7 +11,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 /**
- * @author ycshang
+ * @author maoyumeng
  */
 @Mapper
 public interface UserConvert {
