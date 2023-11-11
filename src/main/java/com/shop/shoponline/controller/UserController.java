@@ -6,6 +6,7 @@ import com.shop.shoponline.entity.User;
 import com.shop.shoponline.query.UserLoginQuery;
 import com.shop.shoponline.service.UserService;
 import com.shop.shoponline.vo.LoginResultVO;
+import com.shop.shoponline.vo.UserVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,6 +43,14 @@ public class UserController {
     private Result<User> getUserInfo(HttpServletRequest request) {
         Integer userId = getUserId(request);
         User userInfo = userService.getUserInfo(userId);
+        return Result.ok(userInfo);
+    }
+    @Operation(summary = "修改用户信息")
+    @PutMapping("/profile")
+    private Result<UserVO> editUserInfo(HttpServletRequest request, @RequestBody @Validated UserVO userVO) {
+        Integer userId = getUserId(request);
+        userVO.setId(userId);
+        UserVO userInfo = userService.editUserInfo(userVO);
         return Result.ok(userInfo);
     }
 }

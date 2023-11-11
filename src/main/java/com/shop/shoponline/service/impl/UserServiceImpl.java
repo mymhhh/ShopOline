@@ -14,6 +14,7 @@ import com.shop.shoponline.service.RedisService;
 import com.shop.shoponline.service.UserService;
 import com.shop.shoponline.vo.LoginResultVO;
 import com.shop.shoponline.vo.UserTokenVO;
+import com.shop.shoponline.vo.UserVO;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -67,6 +68,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userVO.setToken(token);
         return userVO;
     }
+
+    @Override
+    public UserVO editUserInfo(UserVO userVO) {
+        User user =baseMapper.selectById(userVO.getId());
+        if (user==null){
+            throw new ServerException("用户不存在");
+        }
+        User userConvert=UserConvert.INSTANCE.convert(userVO);
+        updateById(userConvert);
+        return userVO;
+    }
+
     @Override
     public User getUserInfo(Integer userId) {
         User user = baseMapper.selectById(userId);
