@@ -5,6 +5,8 @@ import com.shop.shoponline.common.result.Result;
 import com.shop.shoponline.entity.User;
 import com.shop.shoponline.query.UserLoginQuery;
 import com.shop.shoponline.service.UserService;
+import com.shop.shoponline.service.UserShippingAddressService;
+import com.shop.shoponline.vo.AddressVO;
 import com.shop.shoponline.vo.LoginResultVO;
 import com.shop.shoponline.vo.UserVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +16,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 import static com.shop.shoponline.common.utils.ObtainUserIdUtils.getUserId;
 
@@ -32,7 +36,6 @@ import static com.shop.shoponline.common.utils.ObtainUserIdUtils.getUserId;
 public class UserController {
 
     private final UserService userService;
-
     @Operation(summary = "微信登录")
     @PostMapping("login/wxMin")
     public Result<LoginResultVO> wxLogin(@RequestBody @Validated UserLoginQuery query) {
