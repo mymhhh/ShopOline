@@ -65,35 +65,21 @@ public class UserShippingAddressServiceImpl extends ServiceImpl<UserShippingAddr
     //收货地址列表
     @Override
     public List<AddressVO> getAddressList(Integer userId) {
-        List<UserShippingAddress> list = baseMapper.selectList(new LambdaQueryWrapper<UserShippingAddress>()
-                                                               .eq(UserShippingAddress::getUserId, userId));
+        List<UserShippingAddress> list = baseMapper.selectList(new
+                LambdaQueryWrapper<UserShippingAddress>().eq(UserShippingAddress::getUserId, userId));
         List<AddressVO> addressList = AddressConvert.INSTANCE.convertToAddressVOList(list);
         return addressList;
     }
 //获取收货地址详情
     @Override
     public AddressVO getAddressInfo(Integer id) {
-        UserShippingAddress address = baseMapper.selectOne(new LambdaQueryWrapper<UserShippingAddress>()
-                                                           .eq(UserShippingAddress::getId, id));
+        UserShippingAddress address = baseMapper.selectOne(new
+                LambdaQueryWrapper<UserShippingAddress>().eq(UserShippingAddress::getId, id));
         return AddressConvert.INSTANCE.convertToAddressVO(address);
     }
-
+//删除收货地址
     @Override
-    public void delAddress(Integer id) {
-        //逻辑删除,将地址的delete_flag置为1
-        UserShippingAddress userShippingAddress = baseMapper.selectOne(new LambdaQueryWrapper<UserShippingAddress>()
-                                                                        .eq(UserShippingAddress::getId, id));
-        if (userShippingAddress == null) {
-            throw new ServerException("地址不存在");
-        }
-        if (userShippingAddress.getIsDefault() == AddressDefaultEnum.DEFAULT_ADDRESS.getValue()) {
-            throw new ServerException("默认地址不能删除");
-        } else {
-            // 直接执行 SQL 更新语句
-            baseMapper.update(null,
-                    new LambdaUpdateWrapper<UserShippingAddress>()
-                            .set(UserShippingAddress::getDeleteFlag, AddressDelFlagEnum.OPEN_DELETE_FLAG.getValue())
-                            .eq(UserShippingAddress::getId, id));
-        }
+    public void removeShippingAddress(Integer id) {
+        removeById(id);
     }
 }
