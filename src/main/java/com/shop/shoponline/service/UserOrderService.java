@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.shop.shoponline.query.CancelGoodsQuery;
 import com.shop.shoponline.query.OrderQuery;
 import com.shop.shoponline.vo.OrderDetailVO;
+import com.shop.shoponline.vo.OrderLogisticVO;
 import com.shop.shoponline.vo.SubmitOrderVO;
 import com.shop.shoponline.vo.UserOrderVO;
 import com.shop.shoponline.query.OrderPreQuery;
@@ -41,4 +42,8 @@ public interface UserOrderService extends IService<UserOrder> {
     void consignOrder(Integer id);
     // 订单支付
     void payOrder(Integer id);
+    // 确认收货
+    OrderDetailVO receiptOrder(Integer id);
+    // 物流订单信息
+    OrderLogisticVO getOrderLogistics(Integer id);
 }
