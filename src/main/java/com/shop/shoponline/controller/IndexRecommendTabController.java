@@ -14,5 +14,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/shoponline/indexRecommendTab")
 public class IndexRecommendTabController {
-
 }

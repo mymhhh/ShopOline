@@ -26,7 +26,6 @@ public interface GoodsService extends IService<Goods> {
     //首页推荐
     PageResult<RecommendGoodsVO> getRecommendGoodsByPage(Query query);
 
-
     GoodsVO getGoodsDetail(Integer id);
 
 }

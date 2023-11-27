@@ -17,10 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface UserService extends IService<User> {
 
+    //获取用户信息
     User getUserInfo(Integer userId);
+    //一键登录（微信登陆）
     LoginResultVO login(UserLoginQuery query);
-//修改用户信息
+    //修改用户信息
     UserVO editUserInfo(UserVO userVO);
+    //修改头像
     String editUserAvatar(Integer userID, MultipartFile file);
 
 }
