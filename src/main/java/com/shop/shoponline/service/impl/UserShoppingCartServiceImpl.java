@@ -37,7 +37,7 @@ public class UserShoppingCartServiceImpl extends ServiceImpl<UserShoppingCartMap
             throw new ServerException("商品信息不存在");
         }
         if (query.getCount() >goods.getInventory()){
-            throw new ServerException("商品库存不足");
+            throw new ServerException("库存数量不足");
         }
         //插入购物车信息
         UserShoppingCart userShoppingCart=new UserShoppingCart();
@@ -79,7 +79,8 @@ public class UserShoppingCartServiceImpl extends ServiceImpl<UserShoppingCartMap
         // 查询购物车信息
         Goods goods = goodsMapper.selectById(userShoppingCart.getGoodsId());
         if (query.getCount() > goods.getInventory()) {
-            throw new ServerException(goods.getName() + "库存数量不足");
+            throw new ServerException("库存数量不足");
+//            throw new ServerException(goods.getName() + "库存数量不足");
         }
         CartGoodsVO cartGoodsVO = new CartGoodsVO();
         cartGoodsVO.setId(userShoppingCart.getId());

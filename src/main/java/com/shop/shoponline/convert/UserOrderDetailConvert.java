@@ -10,6 +10,6 @@ import org.mapstruct.factory.Mappers;
 public interface UserOrderDetailConvert {
 
     UserOrderDetailConvert INSTANCE = Mappers.getMapper(UserOrderDetailConvert.class);
-
     OrderDetailVO convertToDetailVO(UserOrder userOrder);
+    OrderDetailVO convertToOrderDetailVO(UserOrder userOrder);
 }
