@@ -3,8 +3,10 @@ package com.shop.shoponline.controller;
 import com.alibaba.fastjson2.JSONObject;
 import com.shop.shoponline.common.exception.ServerException;
 import com.shop.shoponline.common.result.Result;
+import com.shop.shoponline.query.OrderPreQuery;
 import com.shop.shoponline.service.UserOrderService;
 import com.shop.shoponline.vo.OrderDetailVO;
+import com.shop.shoponline.vo.SubmitOrderVO;
 import com.shop.shoponline.vo.UserOrderVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,5 +49,18 @@ public class UserOrderController {
         OrderDetailVO orderDetail = userOrderService.getOrderDetail(id);
         return Result.ok(orderDetail);
     }
-
+    @Operation(summary = "填写订单 - 获取预付订单")
+    @GetMapping("pre")
+    public Result<SubmitOrderVO> getPreOrderDetail(HttpServletRequest request) {
+        Integer userId = getUserId(request);
+        SubmitOrderVO preOrderDetail = userOrderService.getPreOrderDetail(userId);
+        return Result.ok(preOrderDetail);
+    }
+    @Operation(summary = "填写订单-获取立即购买订单")
+    @PostMapping("pre/now")
+    public Result<SubmitOrderVO> getPreNowOrderDetail(@RequestBody @Validated OrderPreQuery query, HttpServletRequest request) {
+        query.setUserId(getUserId(request));
+        SubmitOrderVO preNowOrderDetail = userOrderService.getPreNowOrderDetail(query);
+        return Result.ok(preNowOrderDetail);
+    }
 }

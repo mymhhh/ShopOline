@@ -3,12 +3,9 @@ package com.shop.shoponline.service;
 import com.shop.shoponline.entity.UserOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.shop.shoponline.vo.OrderDetailVO;
+import com.shop.shoponline.vo.SubmitOrderVO;
 import com.shop.shoponline.vo.UserOrderVO;
-
-import com.shop.shoponline.entity.UserOrderGoods;
-import com.shop.shoponline.vo.UserOrderVO;
-
-import java.util.List;
+import com.shop.shoponline.query.OrderPreQuery;
 
 /**
  * <p>
@@ -19,8 +16,12 @@ import java.util.List;
  * @since 2023-11-07
  */
 public interface UserOrderService extends IService<UserOrder> {
-    //新增订单
+    // 新增订单
     Integer addGoodsOrder(UserOrderVO userOrderVO);
      // 获取订单详情
     OrderDetailVO getOrderDetail(Integer id);
+     // 填写订单-获取预付订单
+    SubmitOrderVO getPreOrderDetail(Integer userId);
+    // 填写订单-立即支付
+    SubmitOrderVO getPreNowOrderDetail(OrderPreQuery orderPreQuery);
 }
