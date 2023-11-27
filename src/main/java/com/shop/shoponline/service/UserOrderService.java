@@ -10,6 +10,8 @@ import com.shop.shoponline.vo.SubmitOrderVO;
 import com.shop.shoponline.vo.UserOrderVO;
 import com.shop.shoponline.query.OrderPreQuery;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -33,4 +35,6 @@ public interface UserOrderService extends IService<UserOrder> {
     PageResult<OrderDetailVO> getOrderList(OrderQuery query);
     // 取消订单
     OrderDetailVO cancelOrder(CancelGoodsQuery query);
+    // 删除订单
+    void deleteOrder(List<Integer> ids, Integer userId);
 }
