@@ -1,16 +1,22 @@
 package com.shop.shoponline.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.shop.shoponline.common.exception.ServerException;
+import com.shop.shoponline.convert.UserOrderDetailConvert;
 import com.shop.shoponline.entity.Goods;
 import com.shop.shoponline.entity.UserOrder;
 import com.shop.shoponline.entity.UserOrderGoods;
+import com.shop.shoponline.entity.UserShippingAddress;
 import com.shop.shoponline.enums.OrderStatusEnum;
 import com.shop.shoponline.mapper.GoodsMapper;
+import com.shop.shoponline.mapper.UserOrderGoodsMapper;
 import com.shop.shoponline.mapper.UserOrderMapper;
+import com.shop.shoponline.mapper.UserShippingAddressMapper;
 import com.shop.shoponline.query.OrderGoodsQuery;
 import com.shop.shoponline.service.UserOrderGoodsService;
 import com.shop.shoponline.service.UserOrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.shop.shoponline.vo.OrderDetailVO;
 import com.shop.shoponline.vo.UserOrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -18,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +33,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
 /**
  * <p>
  *  服务实现类
@@ -41,6 +50,12 @@ public class UserOrderServiceImpl extends ServiceImpl<UserOrderMapper, UserOrder
 
     @Autowired
     private UserOrderGoodsService userOrderGoodsService;
+
+    @Autowired
+    private UserOrderGoodsMapper userOrderGoodsMapper;
+
+    @Autowired
+    private UserShippingAddressMapper userShippingAddressMapper;
 
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> cancelTask;
@@ -124,5 +139,35 @@ public class UserOrderServiceImpl extends ServiceImpl<UserOrderMapper, UserOrder
         userOrder.setTotalFreight(totalFreight.doubleValue());
         baseMapper.updateById(userOrder);
         return userOrder.getId();
+    }
+
+    @Override
+    public OrderDetailVO getOrderDetail(Integer id) {
+        // 1. 订单信息
+        UserOrder userOrder = baseMapper.selectById(id);
+        if (userOrder == null) {
+            throw new ServerException("订单信息不存在");
+        }
+        OrderDetailVO orderDetailVO = UserOrderDetailConvert.INSTANCE.convertToDetailVO(userOrder);
+        orderDetailVO.setTotalMoney(userOrder.getTotalPrice());
+        // 2. 收货人信息
+        UserShippingAddress userShoppingAddress = userShippingAddressMapper.selectById((userOrder.getAddressId()));
+        if (userShoppingAddress == null) {
+            throw new ServerException("收货地址不存在");
+        }
+        orderDetailVO.setReceiverContact(userShoppingAddress.getReceiver());
+        orderDetailVO.setReceiverMobile(userShoppingAddress.getContact());
+        orderDetailVO.setReceiverAddress(userShoppingAddress.getAddress());
+        // 3. 商品集合
+        List<UserOrderGoods> orderGoodsList = userOrderGoodsMapper.selectList(new LambdaQueryWrapper<UserOrderGoods>().eq(UserOrderGoods::getOrderId, id));
+        orderDetailVO.setSkus(orderGoodsList);
+        // 4. 订单截止到创建30min后
+        orderDetailVO.setPayLatestTime(userOrder.getCreateTime().plusMinutes(30));
+        if (orderDetailVO.getPayLatestTime().isAfter(LocalDateTime.now())) {
+            Duration duration = Duration.between(LocalDateTime.now(), orderDetailVO.getPayLatestTime());
+            // 倒计时秒数
+            orderDetailVO.setCountdown(duration.toMillisPart());
+        }
+        return orderDetailVO;
     }
 }

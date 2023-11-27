@@ -2,6 +2,7 @@ package com.shop.shoponline.service;
 
 import com.shop.shoponline.entity.GoodsDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.shop.shoponline.vo.OrderDetailVO;
 
 /**
  * <p>
